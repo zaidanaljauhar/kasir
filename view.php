@@ -1,3 +1,13 @@
+<?php
+require 'function.php';
+
+if(isset($_GET['idp'])){
+    $idp = $_GET['idp'];
+} else {
+    header('location:index.php');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -57,61 +67,66 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
+                        <h1 class="mt-4">Data Pesanan : <?= $idp; ?> </h1>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Primary Card</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                        Tambah Pesanan
+                                    </button>
+                                    <div class="container mt-3">
                                     </div>
-                                </div>
                             </div>
+
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                DataTable Example
+                                Data Pesanan
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>                                            
+                                            <th>Nama Produk</th>
+                                            <th>Harga Satuan</th>
+                                            <th>Jumlah</th>
+                                            <th>Sub-Total</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
+                                        <?php
+                                        $get = mysqli_query(
+                                            $koneksi,
+                                            "SELECT * FROM detail_pesanan p, produk pr WHERE p.id_produk=pr.id_produk");
+
+                                        //Inisialisasi untuk nomor karena error 
+                                        $i = 1;
+
+                                        while ($ap = mysqli_fetch_array($get)) {
+                                            $qty = $ap['qty'];
+                                            $harga = $ap['harga'];
+                                            $nama_produk = $ap['nama_produk'];
+                                            $subtotal = $qty * $harga;
+
+                                        ?>
                                         <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
+                                            <td><?= $i++; ?></td>
+                                            <td><?= $nama_produk ?></td>                                            
+                                            <td><?= $harga; ?></td>
+                                            <td><?= $qty; ?></td>
+                                            <td><?= $subtotal; ?></td>
+                                            <td>Tampilkan | Delete</td>
                                         </tr>
+                                        <?php 
+                                            }; 
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -119,6 +134,7 @@
                         </div>
                     </div>
                 </footer>
+            </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
@@ -127,3 +143,51 @@
         <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
+    </body>
+    <!-- Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Tambah Data Pesanan</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="POST">
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Pilih Barang
+        <select name="id_produk" class="form-control mt-3">
+
+        <?php
+        $getproduk = mysqli_query($koneksi, "SELECT * FROM produk");
+
+        while ($pr = mysqli_fetch_array($getproduk)){
+            $id_produk = $pr['id_produk'];
+            $nama_produk = $pr['nama_produk'];
+            $stock = $pr['stock'];
+            $deskripsi = $pr['deskripsi'];
+
+        ?>
+        <option value="<?=$id_produk;?>"> <?= $nama_produk; ?> - <?= $deskripsi; ?> </option>
+
+        <?php
+        }
+        ?>
+        </select>
+        <input type="number" name="qty" class="form-control mt-3" placeholder="quantity">
+        <input type="hidden" name="idp" value="<?= $idp; ?>">
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" name="addproduk">Simpan</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</html>

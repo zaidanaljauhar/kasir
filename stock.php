@@ -2,7 +2,6 @@
 require 'function.php';
 $barang = mysqli_query($koneksi, "SELECT * FROM produk");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,6 +40,10 @@ $barang = mysqli_query($koneksi, "SELECT * FROM produk");
                                 <div class="sb-nav-link-icon"><i class="fas fa-folder"></i></div>
                                 Barang Masuk
                             </a>
+                            <a class="nav-link" href="pelanggan.php">
+                                <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                Kelola Pelanggan
+                            </a>
                             <a class="nav-link" href="logout.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
                                 Logout
@@ -67,16 +70,16 @@ $barang = mysqli_query($koneksi, "SELECT * FROM produk");
                                     <div class="card-body">Jumlah Barang :</div>
                                     </div>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                                        Open modal
+                                         Tambah Barang
                                     </button>
                                     <div class="container mt-3">
                                     </div>
                             </div>
-
+                            
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                DataTable Example
+                                Data Stock Barang
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -131,11 +134,10 @@ $barang = mysqli_query($koneksi, "SELECT * FROM produk");
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Modal Heading</h4>
+        <h4 class="modal-title">Tambah Data Barang</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <form method="POST">
-
       <!-- Modal body -->
       <div class="modal-body">
         <input type="text" name="nama_produk" class="form-control mt-3" placeholder="nama produk">
@@ -143,7 +145,6 @@ $barang = mysqli_query($koneksi, "SELECT * FROM produk");
         <input type="num" name="harga" class="form-control mt-3" placeholder="harga">
         <input type="num" name="stock" class="form-control mt-3" placeholder="stock">
       </div>
-
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="submit" class="btn btn-success" name="tambahproduk">Simpan</button>
