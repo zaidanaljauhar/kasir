@@ -1,6 +1,7 @@
 <?php
 require 'function.php';
 $pelanggan = mysqli_query($koneksi, "SELECT * FROM pelanggan");
+$h2 = mysqli_num_rows($pelanggan);
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +69,7 @@ $pelanggan = mysqli_query($koneksi, "SELECT * FROM pelanggan");
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Jumlah Barang :</div>
+                                    <div class="card-body">Jumlah Barang :<?= $h2; ?></div>
                                     </div>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                                         Tambah Data Pelanggan

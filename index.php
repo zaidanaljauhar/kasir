@@ -1,5 +1,8 @@
 <?php
-require 'function.php';
+require 'ceklogin.php';
+// hitung jumlah
+$h1 = mysqli_query($koneksi, "SELECT * FROM pesanan");
+$h2 = mysqli_num_rows($h1);
 ?>
 
 <!DOCTYPE html>
@@ -68,15 +71,16 @@ require 'function.php';
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Jumlah Pesanan </div>
+                                <div class="card-body">Jumlah Pesanan <?= $h2; ?></div>
                                     </div>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                                         Tambah Pesanan
                                     </button>
                                     <div class="container mt-3">
                                     </div>
+                                </div>
                             </div>
-                            
+
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -89,6 +93,7 @@ require 'function.php';
                                             <th>ID Pesanan</th>                                            
                                             <th>Tanggal Pesan</th>
                                             <th>Nama Pelanggan</th>
+                                            <th>Alamat</th>
                                             <th>Jumlah</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -105,12 +110,14 @@ require 'function.php';
                                             $tanggal = $p['tgl_pesan'];
                                             $nama_pelanggan = $p['nama_pelanggan'];
                                             $alamat = $p['alamat'];
-                                        
+                                            $hitungjumlah = mysqli_query($koneksi, "SELECT * FROM detail_pesanan WHERE id_pesanan='$id_pesanan'");
+                                            $jumlah = mysqli_num_rows($hitungjumlah);
                                         ?>
                                         <tr>
-                                            <td><?= $id_pesanan; ?></td>                                            
+                                            <td><?= $id_pesanan ?></td>                                            
                                             <td><?= $tanggal; ?></td>
-                                            <td><?= $nama_pelanggan; ?> - <?= $alamat; ?> </td>
+                                            <td><?= $nama_pelanggan; ?> - <?= $alamat ?> </td>
+                                            <td><?= $id_pesanan ?></td>
                                             <td>Jumlah</td>
                                             <td><a href="view.php?idp= <?= $id_pesanan; ?>" class="btn btn-primary" target="_blank">Tampilkan</a> | Delete</td>
                                         </tr>
@@ -164,7 +171,7 @@ require 'function.php';
             $id_pelanggan = $pl['id_pelanggan'];
             $nama_pelanggan = $pl['nama_pelanggan'];
             $alamat = $pl['alamat'];
-        
+
         ?>
         <option value="<?=$id_pelanggan;?>"> <?= $nama_pelanggan; ?> - <?= $alamat; ?> </option>
 
