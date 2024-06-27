@@ -1,0 +1,9 @@
+user : id_user, username, password
+produk : id_produk, nama_produk, deskripsi, harga, stok
+pesanan : id_pesanan, tgl_pesan, id_pelanggan
+detail_pesanan : id_detailpesanan, id_pesanan, id_produk, qty
+masuk : id_masuk, id_produk, qty, tgl_masuk
+pelanggan : id_pelanggan, nama_pelanggan, notelp, alamat
+
+
+

@@ -1,11 +1,11 @@
 <?php
 require 'function.php';
 
-if (isset($_SESSION['login'])) {
+if(isset($_SESSION['login'])){
     //sudah login
-} else {
+
+}else{
     //belum login
     header('location:login.php');
 }
-
 ?>

@@ -1,10 +1,8 @@
 <?php
 require 'ceklogin.php';
-$barang = mysqli_query($koneksi, "SELECT * from produk");
-
-$h2 = mysqli_num_rows($barang);
+$barang = mysqli_query($koneksi, "SELECT * FROM produk");
+$h2 = mysqli_num_rows($barang); 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,6 +22,7 @@ $h2 = mysqli_num_rows($barang);
             <a class="navbar-brand ps-3" href="index.php">Start Bootstrap</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            
         </nav>
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
@@ -32,31 +31,25 @@ $h2 = mysqli_num_rows($barang);
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Menu</div>
                             <a class="nav-link" href="index.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Order
                             </a>
                             <a class="nav-link" href="stock.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-clipboard"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Stock Barang
                             </a>
                             <a class="nav-link" href="masuk.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-folder"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Barang Masuk
                             </a>
                             <a class="nav-link" href="pelanggan.php">
-                                <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Kelola Pelanggan
                             </a>
                             <a class="nav-link" href="logout.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa fa-sign-out"></i></div>
                                 Logout
                             </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
-                                </nav>
-                            </div>
                         </div>
                     </div>
                 </nav>
@@ -65,24 +58,19 @@ $h2 = mysqli_num_rows($barang);
                 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Stock Barang</h1>
-                        <ol class="breadcrumb mb-4">
-                        </ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                  <div class="card-body">Jumlah Barang : <?= $h2; ?></div>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#myModal">
-                                        Tambah Barang
-                                    </button>
-                                    <div class="container mt-3">
-                                    </div>
+                                <div class="card bg-primary text-white mb-2">
+                                    <div class="card-body">Jumlah Barang: <?= $h2;?></div>
+                                </div>
+                                <div >
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                    Tambah Barang
+                                </button>
                                 </div>
                             </div>
                         </div>
-                            
-                        <div class="card mb-4">
+                        <div class="card mt-3 mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
                                 Data Stock Barang
@@ -96,21 +84,64 @@ $h2 = mysqli_num_rows($barang);
                                             <th>Deskripsi</th>
                                             <th>Harga</th>
                                             <th>Stock</th>
+                                            <th>Edit|Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php $i = 1; ?>
-                                    <?php foreach ($barang as $brg): ?>
+                                        <?php 
+                                        $getbarang = mysqli_query(
+                                            $koneksi,
+                                            "SELECT * FROM produk ");
+                                        $i = 1;
+                                        while ($brg = mysqli_fetch_array($getbarang)) {
+                                            $np = $brg['nama_produk'];
+                                            $deskripsi = $brg['deskripsi'];
+                                            $harga = $brg['harga'];
+                                            $stock = $brg['stock'];
+                                            $id_produk = $brg['id_produk'];
+                                        ?>                            
 
                                         <tr>
-                                            <td><?= $i ?></td>
-                                            <td><?= $brg['nama_produk']; ?></td>
-                                            <td><?= $brg['deskripsi']; ?></td>
-                                            <td><?= $brg['harga']; ?></td>
-                                            <td><?= $brg['stock']; ?></td>
+                                            <td><?= $i; ?></td>
+                                            <td><?= $np; ?></td>
+                                            <td><?= $deskripsi; ?></td>
+                                            <td>Rp.<?= number_format($harga); ?></td>
+                                            <td><?= $stock; ?></td>
+                                            <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#edit<?= $id_produk;?>">Edit</button>|Delete</td>
                                         </tr>
-                                        <?php $i++; ?>
-                                        <?php endforeach ?>
+                                        <!--- Modal --->
+                                        <div class="modal" id="edit<?= $id_produk;?>">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                             <h4 class="modal-title">Data Tambah Stock</h4>
+                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form method="POST">
+                                             <!-- Modal body -->
+                                            <div class="modal-body">
+                                              <input type="text" name="nama_produk" class="form-control mt-3" placeholder="nama produk" value="<?= $brg['nama_produk'] ?>">
+                                              <input type="text" name="deskripsi" class="form-control mt-3" placeholder="deskripsi produk" value="<?= $brg['deskripsi'] ?>">
+                                              <input type="num" name="harga" class="form-control mt-3" placeholder="harga" value="<?= number_format($brg['harga']) ?>">
+                                              <input type="hidden" name="idpr" class="form-control mt-3" placeholder="harga" value="<?= $id_produk; ?>">
+                                                
+                                            </div>
+
+                                             <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success" name="editproduk">Simpan</button>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                            </div>
+
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <?php 
+                                         };  // end while
+                                          ?>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -120,7 +151,7 @@ $h2 = mysqli_num_rows($barang);
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; zaidan 2024</div>
+                            <div class="text-muted">Copyright &copy; Zaidan 2024</div>
                         </div>
                     </div>
                 </footer>
@@ -134,33 +165,33 @@ $h2 = mysqli_num_rows($barang);
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
     </body>
-    <!-- Modal -->
-<div class="modal" id="myModal">
+<!--- Modal --->
+<div class="modal" id="myModal">  
     <div class="modal-dialog">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Data Pesanan</h4>
+                <h4 class="modal-title">Data Tambah Stock</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST">
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <input type="text" name="nama_produk" class="form-control mt-3" placeholder="nama produk">
-                    <input type="text" name="deskripsi" class="form-control mt-3" placeholder="deskripsi produk">
-                    <input type="num" name="harga" class="form-control mt-3" placeholder="harga">
-                    <input type="num" name="stock" class="form-control mt-3" placeholder="stock">
-                </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <input type="text" name="nama_produk" class="form-control mt-3" placeholder="nama produk" >
+                <input type="text" name="deskripsi" class="form-control mt-3" placeholder="deskripsi produk" >
+                <input type="num" name="harga" class="form-control mt-3" placeholder="harga" >
+                <input type="num" name="stock" class="form-control mt-3" placeholder="stock" >
+            </div>
 
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" name="tambahproduk">Simpan</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </form>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" name="tambahproduk">Simpan</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
 
         </div>
     </div>
 </div>
+</form>
 </html>
